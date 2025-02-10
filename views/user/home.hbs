@@ -1,0 +1,45 @@
+<link rel="stylesheet" type="text/css" href="/stylesheet/user/home.css">
+<div class="welcome-box">
+  <h2>Welcome to the Dashboard</h2>
+  <p>Welcome, {{name}}</p>
+  {{!-- <a href="/contact">
+    <button class="logout-btn" id="contact" type="submit">Contact</button>
+  </a>  --}}
+  <a href="/user/logout">
+    <button class="logout-btn" id="logoutButton" type="submit">Logout</button>
+  </a>
+  {{!-- Refresh table button --}}
+  <button class="logout-btn" onclick="refreshUserTable()">Refresh</button>
+</div>
+
+<script>
+ const logoutButton = document.getElementById('logoutButton');
+ const contactPage = document.getElementById('contact');
+
+{{!-- logoutButton.addEventListener('click',() => {
+    window.location.href = '/logout';
+}) --}}
+
+{{!-- logoutButton.addEventListener('click', () => { 
+    fetch('/logout').then(response => {
+       if (response.redirected) { 
+        window.location.href = response.url;
+      } 
+    }); 
+}); --}}
+ 
+{{!-- contactPage.addEventListener('click', ()=>{
+   fetch('/contact').then(response => {
+     if(response.redirected){
+      window.location.href = response.url;
+     }
+   })
+ }) --}}
+
+{{!-- Reload the page --}} 
+function refreshUserTable() {
+     
+       window.location.href = '/user/home'; 
+       window.location.reload(); 
+}
+</script>

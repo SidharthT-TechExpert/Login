@@ -1,0 +1,202 @@
+<link rel="stylesheet" href="/stylesheet/user/login.css">
+
+<main>
+    <div class="main">
+        <input type="checkbox" id="chk" aria-hidden="true">
+        <div class="login">
+            <form id="login-form" action="user/login" method="post">
+                <label for="chk" aria-hidden="true">Login</label>
+                <h3 id="messageLog" style="color: rgb(8, 214, 8); font-weight: bold; text-align: center; text-decoration: underline;"></h3>
+                <input id="Email" type="email" name="email" placeholder="Email">
+                <input id="Password" type="password" name="password" placeholder="Password">
+                <ul id="password-strength-login"></ul>
+                <button type="submit">Login</button>
+                <a href="" id="forget">Forget Password?</a>
+            </form>
+        </div>
+        <div class="signup">
+            <form id="register-form" action="user/signUp" method="post">
+                <input type="hidden" id="message" value="{{message}}">
+                <label for="chk" aria-hidden="true">Sign up</label>
+                <span id="CheckPasswordMatch"></span>
+                <input id="name" type="text" name="name" placeholder="User name">
+                <input id="email" type="email" name="email" placeholder="Email">
+                <input id="password" type="password" name="password" placeholder="Password">
+                <ul id="password-strength-signup"></ul>
+                <input id="confirm_password" type="password" name="confirm_password" placeholder="Confirm Password">
+                <span id="password-match-message" style=" color: red;"></span>
+                <button type="submit">Sign up</button>
+            </form>
+        </div>
+    </div>
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelector('#login-form').addEventListener('submit', formValidateLogin);
+    document.querySelector('#register-form').addEventListener('submit', formValidate);
+
+    document.getElementById('Password').addEventListener('input', validatePasswordStrengthLogin);
+    document.getElementById('password').addEventListener('input', validatePasswordStrengthSignup);
+    document.getElementById('confirm_password').addEventListener('input', checkPasswordMatch);
+
+    document.getElementById('password-strength-login').style.display = 'none';
+    document.getElementById('password-strength-signup').style.display = 'none';
+
+    createPasswordStrengthRequirements('password-strength-login');
+    createPasswordStrengthRequirements('password-strength-signup');
+});
+
+function createPasswordStrengthRequirements(elementId) {
+    const requirements = [
+        { id: 'length', text: 'Password must be at least 8 characters long' },
+        { id: 'uppercase', text: 'Password must contain at least one uppercase letter' },
+        { id: 'lowercase', text: 'Password must contain at least one lowercase letter' },
+        { id: 'number', text: 'Password must contain at least one number' },
+        { id: 'special', text: 'Password must contain at least one special character' }
+    ];
+
+    const ul = document.getElementById(elementId);
+    requirements.forEach(req => {
+        const li = document.createElement('li');
+        li.id = `${req.id}-${elementId.split('-')[2]}`;
+        li.textContent = req.text;
+        li.style.color = 'red'; // Set the color to red
+        ul.appendChild(li);
+    });
+}
+
+function formValidateLogin(e) {
+    e.preventDefault();
+    let email = document.getElementById('Email').value.trim();
+    let password = document.getElementById('Password').value.trim();
+
+    if (email === '' || password === '') {
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "All Fields Are Required!",
+        });
+        return false;
+    }
+
+    if (!isStrongPassword(password)) {
+        Swal.fire({
+            icon: "error",
+            title: "Weak Password",
+            text: "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character.",
+        });
+        return false;
+    }
+
+    e.target.submit();
+    return true;
+}
+
+function formValidate(e) {
+    e.preventDefault();
+    let email = document.getElementById('email').value.trim();
+    let password = document.getElementById('password').value.trim();
+    let confirm_password = document.getElementById('confirm_password').value.trim();
+    const messageLog = document.getElementById('messageLog'); 
+
+    if (email === '' || password === '' || confirm_password === '') {
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "All Fields Are Required!",
+        });
+        return false;
+    }
+
+    if (!isStrongPassword(password)) {
+        Swal.fire({
+            icon: "error",
+            title: "Weak Password",
+            text: "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character.",
+        });
+        return false;
+    }
+
+    if (password !== confirm_password) {
+        Swal.fire({
+            title: 'Error!',
+            text: 'Passwords do not match!',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
+        return false;
+    }
+
+    e.target.submit();
+    return true;
+}
+
+const message = document.getElementById('message').value;
+if (message) {
+    Swal.fire({
+        icon: message === 'User created successfully' ? 'success' : 'error',
+        title: message === 'User created successfully' ? 'Success!' : 'Oops...',
+        text: message,
+    });
+}
+
+if (message === 'User already exists') {
+    console.log('Displaying login message');
+    messageLog.innerHTML = 'Please Try To Login'; 
+}
+
+function isStrongPassword(password) {
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return passwordRegex.test(password);
+}
+
+function validatePasswordStrengthLogin() {
+    const password = document.getElementById('Password').value;
+    updatePasswordStrength(password, 'login');
+}
+
+function validatePasswordStrengthSignup() {
+    const password = document.getElementById('password').value;
+    updatePasswordStrength(password, 'signup');
+}
+
+function updatePasswordStrength(password, type) {
+    const length = document.getElementById(`length-${type}`);
+    const uppercase = document.getElementById(`uppercase-${type}`);
+    const lowercase = document.getElementById(`lowercase-${type}`);
+    const number = document.getElementById(`number-${type}`);
+    const special = document.getElementById(`special-${type}`);
+
+    const passwordStrength = document.getElementById(`password-strength-${type}`);
+    passwordStrength.style.display = 'block';
+
+    const isLengthValid = password.length >= 8;
+    const isUppercaseValid = /[A-Z]/.test(password);
+    const isLowercaseValid = /[a-z]/.test(password);
+    const isNumberValid = /\d/.test(password);
+    const isSpecialValid = /[@$!%*?&]/.test(password);
+
+    length.style.display = isLengthValid ? 'none' : 'list-item';
+    uppercase.style.display = isUppercaseValid ? 'none' : 'list-item';
+    lowercase.style.display = isLowercaseValid ? 'none' : 'list-item';
+    number.style.display = isNumberValid ? 'none' : 'list-item';
+    special.style.display = isSpecialValid ? 'none' : 'list-item';
+
+    if (isLengthValid && isUppercaseValid && isLowercaseValid && isNumberValid && isSpecialValid) {
+        passwordStrength.style.display = 'none';
+    }
+}
+
+function checkPasswordMatch() {
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirm_password').value;
+    const message = document.getElementById('password-match-message');
+
+    if (password !== confirmPassword) {
+        message.textContent = 'Passwords do not match!';
+    } else {
+        message.textContent = '';
+    }
+}
+</script>

@@ -1,0 +1,70 @@
+<link rel="stylesheet" href="/stylesheet/admin/login.css">
+
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+<div class="login-panel">
+    <div class="key-icon">
+        <img src="/img/key_img.png" alt="" style="height: 200px;">
+    </div>
+    <h2>ADMIN PANEL</h2>
+    <form id="login-form" action="/admin/login" method="post">
+        <input type="text" id="message" value="{{message}}" hidden>     
+        <div class="form-group">
+            <input name="email" id="Email" type="email" class="form-control" placeholder="Email">
+        </div>
+        <div class="form-group">
+            <input name="password" id="Password" type="password" class="form-control" placeholder="Password">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Login</button>
+    </form>
+</div>
+
+<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Attach formValidate only to the login form
+        document.querySelector('#login-form').addEventListener('submit', formValidateLogin);
+    });
+
+    function formValidateLogin(e) {
+        e.preventDefault(); // Prevent default form submission
+        let email = document.getElementById('Email').value.trim();
+        let password = document.getElementById('Password').value.trim();
+
+        // Validation for empty fields
+        if (email === '' || password === '') {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "All Fields Are Required!",
+            });
+            message = null;
+            return false;
+        }
+
+const message = document.getElementById('message').value;
+    if (message) {
+            Swal.fire({
+                icon: message === 'User created successfully' ? 'success' : 'error',
+                title: message === 'User created successfully' ? 'Success!' : 'Oops...',
+                text: message,
+            });
+            Swal.fire({
+                icon: message ===  'Invalid Password' ? 'error' : 'success',
+                title: message === 'Invalid Password' ? 'Oops...' : 'Success!',
+                text: message,
+            });
+            Swal.fire({
+                icon: message ===  'Invalid credentials' ? 'error' : 'success',
+                title: message === 'Invalid credentials' ? 'Oops...' : 'Success!',
+                text: message,
+            });
+            message = null;
+            return false;  
+    }  
+        // If validation passes, allow form submission
+        e.target.submit();
+        return true; 
+    }
+</script>

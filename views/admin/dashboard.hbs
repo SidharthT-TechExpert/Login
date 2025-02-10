@@ -1,0 +1,224 @@
+{{!-- Link to the CSS stylesheet for the admin dashboard --}}
+<link rel="stylesheet" href="/stylesheet/admin/dashboard.css">
+ 
+{{!-- Main container for the dashboard --}}
+<div class="dashboard"> 
+   {{!-- Header section --}}
+    <header> 
+        {{!-- Dashboard title --}}
+        <h1>Admin Dashboard</h1> 
+        {{!-- Display the username --}}
+        <p>{{username}}</p> 
+        {{!-- Logout button --}}
+        <input type="text" id="message" value="{{message}}" hidden>  
+        <button class="logout-btn" onclick="window.location.href='/admin/logout'">Logout</button> 
+    </header>
+     {{!-- User management section --}}
+     <section class="user-management">
+        {{!-- Container for action buttons --}}
+        <div class="actions"> 
+           {{!-- User management title --}} 
+           <h2>User Management</h2> 
+            {{!-- Search form --}}
+            <form class="d-flex" role="search" action="/admin/search-user" method="post"> 
+               {{!-- Search input --}}
+                <input class="form-control me-2" name="search" type="search" placeholder="Search" aria-label="Search" autocomplete="off"> 
+                {{!-- Search button --}}
+                <button class="btn btn-outline-success" type="submit">Search</button> 
+            </form>
+
+            {{!-- Add new user button --}}
+           
+            <button class="add-user-btn" onclick="openAddUserModal()">Add New User</button> 
+              {{!-- Refresh table button --}}
+            <button class="add-user-btn" style="background-color: rgb(159, 57, 57);" onclick="refreshUserTable()">Refresh</button>
+        </div>
+        <table id="user-table" class="user-table"> {{!-- User table --}}
+             {{!-- Table header --}}
+             <thead>
+                <tr>
+                   {{!-- Column for user index --}} 
+                   <th>No:</th> 
+                    {{!-- Column for user name --}}
+                    <th>Name</th> 
+                    {{!-- Column for user email --}}
+                    <th>Email</th> 
+                    {{!-- Column for action buttons --}}
+                    <th>Actions</th> 
+                </tr>
+            </thead>
+           {{!-- Table body --}}
+            <tbody> 
+               {{!-- Iterate over users --}}
+                {{#each users}} 
+                <tr>
+                    {{!-- Display user index --}}
+                    <td class="index">{{ @index}}</td> 
+                    {{!-- Display user name --}}
+                    <td>{{this.name}}</td> 
+                    {{!-- Display user email --}}
+                    <td>{{this.email}}</td> 
+                    <td>
+                        {{!-- Edit user button --}}
+                        <button class="edit-btn" onclick="openEditUserModal('{{this._id}}','{{this.email}}','{{this.name}}')">Edit</button> 
+                        {{!-- Delete user button --}}
+                        <button class="delete-btn" onclick="deleteUser('{{_id}}','{{this.email}}')">Delete</button> 
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </section>
+</div>
+
+<!-- Add User Modal -->
+<div id="addUserModal" class="modal"> 
+    {{!-- Modal content --}}
+    <div class="modal-content"> 
+         {{!-- Close modal button --}}
+         <span class="close" onclick="closeAddUserModal()">&times;</span>
+        {{!-- Modal title --}}
+        <h2>Add User</h2> 
+        {{!-- Add user form --}}
+        <form id="addUserForm" method="POST" action="/admin/add-user"> 
+            {{!-- Name label --}}
+            <label for="addName">Name:</label> 
+            {{!-- Name input --}}
+            <input type="text" id="addName" name="name" required> 
+            {{!-- Email label --}}
+            <label for="addEmail">Email:</label> 
+            {{!-- Email input --}}
+            <input type="email" id="addEmail" name="email" required> 
+            {{!-- Password label --}}
+            <label for="addPassword">Password:</label> 
+            {{!-- Password input --}}
+            <input type="password" id="addPassword" name="password" required> 
+            {{!-- Add user button --}}
+            <button type="submit" class="modal-btn">Add User</button> 
+        </form>
+    </div>
+</div>
+
+<!-- Edit User Modal -->
+<div id="editUserModal" class="modal">
+    {{!-- Modal content --}}
+    <div class="modal-content"> 
+        {{!-- Close modal button --}}
+        <span class="close" onclick="closeEditUserModal()">&times;</span> 
+        {{!-- Modal title --}}
+        <h2>Edit User</h2> 
+        {{!-- Edit user form --}}
+        <form id="editUserForm" method="POST" action="/admin/edit-user"> 
+            {{!-- Hidden input for user ID --}}
+            <input type="hidden" id="editUserId" name="id"> 
+            {{!-- Name label --}}
+            <label for="editName">Name:</label> 
+            {{!-- Name input --}}
+            <input type="text" id="editName" name="name" required> 
+            {{!-- Email label --}}
+            <label for="editEmail">Email:</label> 
+            {{!-- Email input --}}
+            <input type="email" id="editEmail" name="email" required> 
+            {{!-- New password label --}}
+            <label for="editPassword">New Password:</label> 
+            {{!-- New password input --}}
+            <input type="password" id="editPassword" name="password"> 
+            {{!-- Save changes button --}}
+            <button type="submit" class="modal-btn">Save Changes</button> 
+        </form>
+    </div>
+</div>
+
+<script>
+    // Open and Close Add User Modal
+    function openAddUserModal() {
+        document.getElementById('addUserModal').style.display = 'block'; {{!-- Display add user modal --}}
+    }
+
+    function closeAddUserModal() {
+        document.getElementById('addUserModal').style.display = 'none'; {{!-- Hide add user modal --}}
+    }
+
+    // Open and Close Edit User Modal
+    function openEditUserModal(id, email, name) {
+        console.log(id, email , name); {{!-- Log user details --}}
+        document.getElementById('editUserModal').style.display = 'block'; {{!-- Display edit user modal --}}
+        document.getElementById('editUserId').value = id; {{!-- Set user ID --}}
+        document.getElementById('editEmail').value = email; {{!-- Set user email --}}
+        document.getElementById('editName').value = name; {{!-- Set user name --}}
+    }
+
+    function closeEditUserModal() {
+        document.getElementById('editUserModal').style.display = 'none'; {{!-- Hide edit user modal --}}
+    }
+
+    // Delete User function
+    function deleteUser(userId , Emailname) {
+        const confirmDelete = window.confirm(`⚠️ Are you absolutely sure you want to delete the user "${Emailname}"? This action is irreversible.`); {{!-- Confirm delete --}}
+        if (confirmDelete) {
+            window.location.href = `/admin/delete-user/${userId}`; {{!-- Redirect to delete user --}}
+        }
+    }
+
+    // Refresh User Table function
+    function refreshUserTable() {
+       window.location.href = '/admin/dashboard'; 
+       window.location.href.reload(); 
+    }
+
+
+// Get a message from the server
+
+const message = document.getElementById('message').value;
+
+if(message === 'This Email Already Exists'){
+    swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: message,
+    });
+    message = null;
+}else if(message === 'User added successfully'){
+    swal.fire({
+        icon: 'success',
+        title: 'Success!',
+        text: message,
+    });
+    message = null;
+}else if(message === 'User updated successfully'){
+    swal.fire({
+        icon: 'success',
+        title: 'Success!',
+        text: message,
+    });
+    message = null;
+}else if(message === 'User deleted successfully'){
+    swal.fire({
+        icon: 'success',
+        title: 'Success!',
+        text: message,
+    });
+    message = null;
+}else if(message === 'User not found'){
+    swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: message,
+    });
+    message = null;
+}else if(message === 'Your not give any data'){
+    swal.fire({
+        icon : 'error',
+        title: 'Oops...',
+        text:message,
+    });
+    message = null;
+}else if(message === 'Invalid Password'){
+    swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: message,
+    });
+    message=null;
+}
+</script>
