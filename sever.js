@@ -33,6 +33,9 @@ app.use('*',(req,res) => {
     res.redirect('/user');
 })
 
+
+
+
  
 connectDB();  
 
