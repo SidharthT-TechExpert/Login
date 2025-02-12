@@ -52,7 +52,7 @@ const loadlogin = (req, res) => {
 const loadHome = async (req, res) => {
     const { email } = req.params; // Destructure email from request params
     const user = await userSchema.findOne({ email }); // Find user by email
-
+                                            
     res.render('user/home', { name: user.name }); // Render home page with user's name
 }
 
@@ -64,7 +64,29 @@ const logout = (req, res) => {
 
 // Function to handle wrong user credentials
 const wrongUser = (req, res) => {
-    return res.redirect(302, `/user/${message = 'Wrong Credentials'}`); // Redirect to user page with error message
+    return res.redirect(302, `/user`); // Redirect to user page with error message
+}
+
+const loadForget = async(req, res) => {
+  res.render('user/newp');
+} 
+
+const forget = async(req,res) => {
+    const {email,password} = req.body;
+    console.log(email);
+    const hashedPassword = await bcrypt.hash(password , 10);
+
+    const user = await userSchema.findOne({email});
+
+    if(!user)
+      res.render(`user/login`,{message:'User not found'})
+
+   await userSchema.findOneAndUpdate({email},{$set:{
+    password:hashedPassword,
+   }});
+
+   res.render('user/login',{message:'User changed successfully'});
+
 }
 
 // Export all functions
@@ -75,4 +97,6 @@ module.exports = {
     loadHome,
     logout,
     wrongUser,
+    forget,
+    loadForget
 };

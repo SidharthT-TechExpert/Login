@@ -216,9 +216,15 @@ if(message === 'This Email Already Exists'){
 }else if(message === 'Invalid Password'){
     swal.fire({
         icon: 'error',
-        title: 'Oops...',
+        title: 'Oops...', 
         text: message,
     });
     message=null;
+}else if(message ==='You did not provide any data'){
+    swal.fire({
+        icon:'error',
+        title:'Oops...',
+        text:message,
+    });
 }
 </script>

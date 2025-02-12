@@ -11,7 +11,7 @@
                 <input id="Password" type="password" name="password" placeholder="Password">
                 <ul id="password-strength-login"></ul>
                 <button type="submit">Login</button>
-                <a href="" id="forget">Forget Password?</a>
+                <a href="/forget" id="forget">Forget Password?</a>
             </form>
         </div>
         <div class="signup">
@@ -133,10 +133,18 @@ function formValidate(e) {
 }
 
 const message = document.getElementById('message').value;
-if (message) {
+if (message === 'User created successfully') {
     Swal.fire({
-        icon: message === 'User created successfully' ? 'success' : 'error',
-        title: message === 'User created successfully' ? 'Success!' : 'Oops...',
+        icon:'success',
+        title: 'Success!',
+        text: message,
+    });
+}
+
+if (message ==='User changed successfully') {
+    Swal.fire({
+        icon:'success',
+        title:'Success!',
         text: message,
     });
 }
@@ -146,6 +154,13 @@ if (message === 'User already exists') {
     messageLog.innerHTML = 'Please Try To Login'; 
 }
 
+if(message === 'User not found'){
+        Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: message,
+    });
+}
 function isStrongPassword(password) {
     const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     return passwordRegex.test(password);

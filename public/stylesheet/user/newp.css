@@ -1,0 +1,72 @@
+body {
+    background-color: #87CEEB;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.reset-password-container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    position: relative;
+}
+
+.key-icon {
+    background-color: #3b5998;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: -25px;
+    left: calc(50% - 25px);
+}
+
+.key-icon img {
+    width: 30px;
+    height: 30px;
+}
+
+h2 {
+    margin-top: 30px;
+    color: #3b5998;
+}
+
+input[type="password"],
+input[type='email']{
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.buttons button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.buttons .continue {
+    background-color: #3b5998;
+    color: white;
+}
+
+.buttons .cancel {
+    background-color: #ccc;
+    color: black;
+}
