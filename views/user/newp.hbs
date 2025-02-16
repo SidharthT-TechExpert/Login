@@ -1,0 +1,57 @@
+<link rel="stylesheet" href="/stylesheet/user/newp.css">
+
+<div class="reset-password-container">
+    <div class="key-icon">
+        <i class="bi bi-key"></i>
+    </div>
+    <h2>Reset Password</h2>
+    <form action="/forgetPass" id="login-form" method="post">
+        <input type="email" name="email" id="email" placeholder="Email">
+        <input id="password" name="password" type="password" placeholder="New Password">
+        <input id="confirm_password" name="confirm_password" type="password" placeholder="Confirm New Password">
+        <div class="buttons">
+           <button class="continue" type="submit">Continue</button>
+           <a href="/user/cancel"> <button class="cancel" type="button">Cancel</button></a>
+        </div>
+    </form>
+    
+</div>
+
+
+
+<script>
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelector('#login-form').addEventListener('submit', formValidate);
+   
+});
+    function formValidate(e) {
+    e.preventDefault();
+    let password = document.getElementById('password').value.trim();
+    let confirm_password = document.getElementById('confirm_password').value.trim();
+    let email = document.getElementById('email').value.trim();
+
+    if (email ==='' || password === '' || confirm_password === '') {
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "All Fields Are Required!",
+        });
+        return false;
+    }
+
+
+    if (password !== confirm_password) {
+        Swal.fire({
+            title: 'Error!',
+            text: 'Passwords do not match!',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
+        return false;
+    }
+
+    e.target.submit();
+    return true;
+}
+</script>

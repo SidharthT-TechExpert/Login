@@ -11,7 +11,7 @@
                 <input id="Password" type="password" name="password" placeholder="Password">
                 <ul id="password-strength-login"></ul>
                 <button type="submit">Login</button>
-                <a href="" id="forget">Forget Password?</a>
+                <a href="/forget" id="forget">Forget Password?</a>
             </form>
         </div>
         <div class="signup">
@@ -45,6 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     createPasswordStrengthRequirements('password-strength-login');
     createPasswordStrengthRequirements('password-strength-signup');
+
+    handleSessionMessages();
 });
 
 function createPasswordStrengthRequirements(elementId) {
@@ -132,18 +134,31 @@ function formValidate(e) {
     return true;
 }
 
-const message = document.getElementById('message').value;
-if (message) {
-    Swal.fire({
-        icon: message === 'User created successfully' ? 'success' : 'error',
-        title: message === 'User created successfully' ? 'Success!' : 'Oops...',
-        text: message,
-    });
-}
+function handleSessionMessages() {
+    const message = document.getElementById('message').value;
+    const messageLog = document.getElementById('messageLog');
 
-if (message === 'User already exists') {
-    console.log('Displaying login message');
-    messageLog.innerHTML = 'Please Try To Login'; 
+    if (message === 'User created successfully' || message === 'User changed successfully' ||
+        message === 'Password Chaged Successfully') {
+        Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: message,
+        });
+    } else if (message === 'User already exists') {
+        messageLog.innerHTML = 'Please Try To Login';
+         Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: message,
+        });
+    } else if (message === 'User not found' || message === 'Invalid Credentials') {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: message,
+        });
+    }
 }
 
 function isStrongPassword(password) {

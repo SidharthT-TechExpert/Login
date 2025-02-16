@@ -2,13 +2,13 @@ const adminModel = require('../model/adminModel'); // Import the admin model
 const bcrypt = require('bcrypt'); // Import bcrypt for password hashing
 const userModel = require('../model/userModel'); // Import the user model
 
-
-
+ 
 // Function to load the login page
-const loadLogin = (req, res) => {
-    res.render('admin/login'); 
-};
-
+const loadLogin = (req, res) => { 
+    const mess = req.session.message;
+    res.render('admin/login',{message:mess ||''}); 
+}; 
+ 
 // Function to handle login
 const login = async (req, res) => {
     try {
@@ -17,44 +17,61 @@ const login = async (req, res) => {
         console.log(email, password); 
         
         // Find admin by email (case-insensitive query)
-        const admin = await adminModel.findOne({ email});
+        const admin = await adminModel.findOne({ email }).lean();
         console.log(admin);
+        const hashedPassword = await bcrypt.hash(password , 10);
+        console.log(hashedPassword)
 
-        if (!admin)
-            return res.render('admin/login', { message: 'Invalid credentials' }); // Render login page with error message if admin not found
+        // Properly formatted if statement 
+        if (!admin) {
+            req.session.message = 'Invalid credentials'
+            return res.redirect('/admin'); // Render login page with error message if admin not found
+        }
         
-        // Check if the password matches
-        const isMatch = password === admin.password ? true : false;
-        //await bcrypt.compare(password, admin.password);
+        // Check if the password matches 
+        const isMatch = await bcrypt.compare(password , admin.password);  
 
-        console.log(isMatch);
+        //admin.password ? true : false; 
+
+
+        console.log(isMatch);  
+
 
         // Render login page with error message if password is incorrect
-        if (!isMatch)
-            return res.render('admin/login', { message: 'Invalid Password' }); 
-
-        req.session.admin = true; 
+        if (!isMatch) {
+            req.session.message ='Invalid Password' 
+            return res.redirect('/admin'); 
+        }
+        req.session.admin = email; 
+        console.log(req.session.admin);
         res.redirect('/admin/dashboard');
 
     } catch (error) {
         console.log(error);
+        res.status(500).send("Internal Server Error"); // Handle unexpected errors gracefully
     }
 };
+
 
 // Function to load the dashboard
 const loadDashboard = async (req, res) => {
     try {
-        const admin = req.session.admin; 
+        const email = req.session.admin; 
 
         // Redirect to admin login if not logged in
-        if (!admin)
+        if (!email)
             return res.redirect('/admin'); 
 
         // Find all users
         const users = await userModel.find({}); 
-
-       // Render the dashboard with users
-        res.render('admin/dashboard', { users }); 
+        const admin = await adminModel.findOne({ email: req.session.admin }).lean();
+        // Render the dashboard with users
+        console.log('admin:'); 
+        console.log(admin);
+        
+        const name = admin ? admin.name : '';
+        console.log('Admin name:', name);
+        res.render('admin/dashboard', { users, name });
         
     } catch (error) {
         console.log(error); // Log any errors
@@ -177,8 +194,8 @@ const searchUser = async (req, res) => {
          // Find users by name or email
         const searchUsers = await userModel.find({
             $or: [
-                { name: search },
-                { email: search }
+            { name: { $regex: search, $options: 'i' } },
+            { email: { $regex: search, $options: 'i' } }
             ]
         });
       

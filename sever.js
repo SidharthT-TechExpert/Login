@@ -13,7 +13,7 @@ app.use(session({
     resave:false,
     saveUninitialized:true,
     cookkie:{
-        maxAge:1000*60*60*24
+        maxAge: 30 * 60 * 1000 // 30 minutes
     }
 }))
 
@@ -32,6 +32,9 @@ app.use('/',userRouter);
 app.use('*',(req,res) => {
     res.redirect('/user');
 })
+
+
+
 
  
 connectDB();  

@@ -8,7 +8,7 @@
         {{!-- Dashboard title --}}
         <h1>Admin Dashboard</h1> 
         {{!-- Display the username --}}
-        <p>{{username}}</p> 
+        <p>{{name}}</p> 
         {{!-- Logout button --}}
         <input type="text" id="message" value="{{message}}" hidden>  
         <button class="logout-btn" onclick="window.location.href='/admin/logout'">Logout</button> 
@@ -216,9 +216,15 @@ if(message === 'This Email Already Exists'){
 }else if(message === 'Invalid Password'){
     swal.fire({
         icon: 'error',
-        title: 'Oops...',
+        title: 'Oops...', 
         text: message,
     });
     message=null;
+}else if(message ==='You did not provide any data'){
+    swal.fire({
+        icon:'error',
+        title:'Oops...',
+        text:message,
+    });
 }
 </script>
