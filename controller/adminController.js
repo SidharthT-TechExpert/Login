@@ -45,7 +45,7 @@ const login = async (req, res) => {
         req.session.admin = email; 
         console.log(req.session.admin);
         res.redirect('/admin/dashboard');
-
+      
     } catch (error) {
         console.log(error);
         res.status(500).send("Internal Server Error"); // Handle unexpected errors gracefully
