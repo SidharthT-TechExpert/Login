@@ -3,20 +3,20 @@ const routes = express.Router();
 const userController = require('../controller/userController');
 const auth = require('../middleware/Auth.js');
 
+//Get Methods
 routes.get('/', auth.isLogin, userController.loadlogin);
-routes.get('/user/:message', auth.isLogin, userController.loadlogin);
 routes.get('/user', auth.isLogin, userController.loadlogin);
-routes.get('/wrongUser',auth.isLogin , userController.wrongUser)
-routes.post('/wrongUser',auth.isLogin , userController.wrongUser)
+routes.get('/wrongUser',auth.wrong , userController.wrongUser)
 routes.get('/login', auth.isLogin, userController.loadlogin);
-routes.post('/login', auth.isUser, userController.login);
-routes.post('/signUp', userController.registerUser);
-routes.get('/signUp',auth.isLogin,userController.login);
-routes.get('/home', auth.checkSession, userController.loadHome);
-routes.get('/home/:email', auth.checkSession, userController.loadHome);
+routes.get('/home', auth.isLogin, userController.loadHome);
 routes.get('/logout', auth.checkSession, userController.logout);
 routes.get('/forget',userController.loadForget);
+routes.get('/cancel',userController.cancel);
+//Post Methods
+routes.post('/login', userController.login);
+routes.post('/signUp', userController.registerUser);
 routes.post('/forgetPass', userController.forget)
 
 
 module.exports = routes;
+

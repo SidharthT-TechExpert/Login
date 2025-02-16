@@ -45,6 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     createPasswordStrengthRequirements('password-strength-login');
     createPasswordStrengthRequirements('password-strength-signup');
+
+    handleSessionMessages();
 });
 
 function createPasswordStrengthRequirements(elementId) {
@@ -132,35 +134,33 @@ function formValidate(e) {
     return true;
 }
 
-const message = document.getElementById('message').value;
-if (message === 'User created successfully') {
-    Swal.fire({
-        icon:'success',
-        title: 'Success!',
-        text: message,
-    });
-}
+function handleSessionMessages() {
+    const message = document.getElementById('message').value;
+    const messageLog = document.getElementById('messageLog');
 
-if (message ==='User changed successfully') {
-    Swal.fire({
-        icon:'success',
-        title:'Success!',
-        text: message,
-    });
-}
-
-if (message === 'User already exists') {
-    console.log('Displaying login message');
-    messageLog.innerHTML = 'Please Try To Login'; 
-}
-
-if(message === 'User not found'){
+    if (message === 'User created successfully' || message === 'User changed successfully' ||
+        message === 'Password Chaged Successfully') {
         Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: message,
-    });
+            icon: 'success',
+            title: 'Success!',
+            text: message,
+        });
+    } else if (message === 'User already exists') {
+        messageLog.innerHTML = 'Please Try To Login';
+         Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: message,
+        });
+    } else if (message === 'User not found' || message === 'Invalid Credentials') {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: message,
+        });
+    }
 }
+
 function isStrongPassword(password) {
     const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     return passwordRegex.test(password);

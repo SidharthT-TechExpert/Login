@@ -44,22 +44,21 @@
         }
 
 const message = document.getElementById('message').value;
-    if (message) {
+    if (message === 'Invalid Password'){
             Swal.fire({
-                icon: message === 'User created successfully' ? 'success' : 'error',
-                title: message === 'User created successfully' ? 'Success!' : 'Oops...',
+                icon:'error' ,
+                title:'Oops...',
                 text: message,
             });
+               message = null;
+            return false; 
+    }else if(message === 'Invalid credentials'){
             Swal.fire({
-                icon: message ===  'Invalid Password' ? 'error' : 'error',
-                title: message === 'Invalid Password' ? 'Oops...' : 'Oops...',
+                icon:'error',
+                title:'Oops...',
                 text: message,
             });
-            Swal.fire({
-                icon: message ===  'Invalid credentials' ? 'error' : 'success',
-                title: message === 'Invalid credentials' ? 'Oops...' : 'Success!',
-                text: message,
-            });
+    
             message = null;
             return false;  
     }  
