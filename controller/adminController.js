@@ -19,7 +19,9 @@ const login = async (req, res) => {
         // Find admin by email (case-insensitive query)
         const admin = await adminModel.findOne({ email }).lean();
         console.log(admin);
-        const hashedPassword = await bcrypt.hash(password , 10);
+
+        const hashedPassword = await bcrypt.hash(password , 12);
+
         console.log(hashedPassword)
 
         // Properly formatted if statement 
@@ -140,7 +142,7 @@ const addUser = async (req, res) => {
 
           // Save the new user
             await newUser.save(); 
-        
+         
          // Find all users
             const users = await userModel.find({}); 
         

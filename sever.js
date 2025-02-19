@@ -12,7 +12,7 @@ app.use(session({
     secret:'keyboard cat',
     resave:false,
     saveUninitialized:true,
-    cookkie:{
+    cookie:{
         maxAge: 30 * 60 * 1000 // 30 minutes
     }
 }))
