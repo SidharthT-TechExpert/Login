@@ -33,6 +33,7 @@ const registerUser = async (req, res) => {
 
 // Function to handle user login
 const login = async (req,res) => {
+   try {
     const { email, password } = req.body;
     console.log(email);
       const user = await userSchema.findOne({ email });
@@ -48,12 +49,19 @@ const login = async (req,res) => {
       req.session.user = email; 
       const users = await userSchema.findOne({email});
       res.redirect('/user');
+   } catch (error) {
+    consle.log(error)
+   }
 }
 
 // Function to load the login page
 const loadlogin = (req, res) => {
+   try {
     const mess = req.session.message;
     res.render('user/login', { message: mess || '' }); // Render login page with message
+   } catch (error) {
+    console.log(error);
+   }
 }
 
 // Function to load the home page
@@ -67,12 +75,9 @@ const loadHome = async (req, res) => {
 
 // Function to handle user logout 
 const logout = (req, res) => {  
-    req.session.destroy((err) => {
-        if (err) {
-            return res.status(500).send('Failed to log out');
-        }
-        res.redirect('/'); // Redirect to home page
-    });
+    req.session.user = false;
+    res.redirect('/user/login'); // Redirect to login page
+    
 }
 
 // Function to handle wrong user credentials
