@@ -76,8 +76,8 @@ const loadHome = async (req, res) => {
 // Function to handle user logout 
 const logout = (req, res) => {  
     req.session.user = false;
-    res.redirect('/user/login'); // Redirect to login page
-    
+    res.redirect('/'); // Redirect to login page
+
 }
 
 // Function to handle wrong user credentials
