@@ -6,7 +6,7 @@ const saltRounds = 10; // Define the number of salt rounds for bcrypt
 const registerUser = async (req, res) => {
     try {
         const { name, email, password } = req.body; // Destructure name, email, and password from request body
-
+           
         const user = await userSchema.findOne({ email }); // Check if user already exists
 
         if (user) {
@@ -59,7 +59,8 @@ const loadlogin = (req, res) => {
    try {
     const mess = req.session.message;
     res.render('user/login', { message: mess || '' }); // Render login page with message
-   } catch (error) {
+   req.session.message = ''; // Clear the message
+} catch (error) {
     console.log(error);
    }
 }
@@ -76,8 +77,8 @@ const loadHome = async (req, res) => {
 // Function to handle user logout 
 const logout = (req, res) => {  
     req.session.user = false;
+    req.session.message = 'User Log out successfully'; // Set message in session
     res.redirect('/'); // Redirect to login page
-
 }
 
 // Function to handle wrong user credentials
@@ -92,20 +93,22 @@ const loadForget = (req, res) => {
 
 const forget = async(req,res) => {
     const {email,password} = req.body;
-    console.log(email);
     const hashedPassword = await bcrypt.hash(password , 10);
 
     const user = await userSchema.findOne({email});
 
-    if(!user)
-      res.render(`user/login`,{message:'User not found'})
+    if(!user){
+        req.session.message = 'User not found';
+        return res.redirect('/');
+    }
 
    await userSchema.findOneAndUpdate({email},{$set:{
     password:hashedPassword,
    }});
    
    req.session.message = 'Password Chaged Successfully';
-   res.redirect('/user/login');   
+   req.session.user = email;
+   res.redirect('/');   
 }
 
 const cancel = async (req,res) => {
