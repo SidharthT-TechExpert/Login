@@ -1,13 +1,14 @@
 const express = require('express');
 const app = express();
-const userRouter = require('./routes/user');
-const adminRouter = require('./routes/admin');
 const hbs = require('hbs');
 const connectDB = require('./db/connectDB');
 const session = require('express-session');
 const nocache = require('nocache');
 
  
+const userRouter = require('./routes/user');
+const adminRouter = require('./routes/admin');
+
 app.use(session({
     secret:'keyboard cat',
     resave:false,
@@ -27,11 +28,11 @@ app.use(express.json());
 
 app.use('/admin',adminRouter); 
 app.use('/user',userRouter);
-app.use('/',userRouter); 
+// app.use('/',userRouter); 
 
-app.use('*',(req,res) => {
-    res.redirect('/user');
-})
+// app.use('*',(req,res) => {
+//     res.status(404).render('page-404');
+// })
 
 
 

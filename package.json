@@ -2,19 +2,31 @@
   "name": "login",
   "version": "1.0.0",
   "description": "Login and SignUp page Using Html css js node.js express.js MongoDB",
+  "homepage": "https://github.com/SidharthT-TechExpert/Login#readme",
+  "bugs": {
+    "url": "https://github.com/SidharthT-TechExpert/Login/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SidharthT-TechExpert/Login.git"
+  },
+  "license": "ISC",
+  "author": "SIDHARTH T",
+  "type": "commonjs",
   "main": "sever.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "SIDHARTH T",
-  "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.1",
-    "express": "^4.21.2",
+    "bootstrap": "^5.3.5",
+    "bootstrap-icons": "^1.11.3",
+    "express": "^5.1.0",
     "express-session": "^1.18.1",
     "hbs": "^4.2.0",
     "mongoose": "^8.9.7",
     "nocache": "^4.0.0",
     "sweetalert2": "^11.6.13"
-  }
+  },
+  "devDependencies": {}
 }
